@@ -1,0 +1,77 @@
+import React, { useState, useEffect } from "react";
+
+const TimeCountdownApp = () => {
+  // State variables
+  const [currentTime, setCurrentTime] = useState("");
+  const [countdownTime, setCountdownTime] = useState(0);
+  const [countdownDisplay, setCountdownDisplay] = useState("");
+  const [isCountingDown, setIsCountingDown] = useState(false);
+
+  // Function to fetch and display the current system time
+  const fetchSystemTime = () => {
+    const now = new Date();
+    setCurrentTime(now.toLocaleTimeString());
+  };
+
+  // Function to start the countdown
+  const startCountdown = () => {
+    if (countdownTime <= 0) {
+      alert("Please enter a positive number for countdown.");
+      return;
+    }
+
+    setIsCountingDown(true);
+    let timeLeft = countdownTime;
+
+    const timer = setInterval(() => {
+      timeLeft--;
+      setCountdownDisplay(${timeLeft}s);
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        setCountdownDisplay("Time's up!");
+        setIsCountingDown(false);
+      }
+    }, 1000);
+  };
+
+  // Error handling for user inputs
+  const handleCountdownInput = (event) => {
+    const input = parseInt(event.target.value, 10);
+    if (isNaN(input) || input < 0) {
+      alert("Please enter a valid non-negative number.");
+      setCountdownTime(0);
+    } else {
+      setCountdownTime(input);
+    }
+  };
+
+  return (
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
+      <h1>System Time and Countdown Application</h1>
+
+      {/* System Time Section */}
+      <div>
+        <h2>System Time</h2>
+        <button onClick={fetchSystemTime}>Fetch System Time</button>
+        <p>{currentTime ? Current Time: ${currentTime} : "Time not fetched yet"}</p>
+      </div>
+
+      {/* Countdown Timer Section */}
+      <div style={{ marginTop: "30px" }}>
+        <h2>Countdown Timer</h2>
+        <input
+          type="number"
+          placeholder="Enter seconds"
+          disabled={isCountingDown}
+          onChange={handleCountdownInput}
+        />
+        <button onClick={startCountdown} disabled={isCountingDown}>
+          Start Countdown
+        </button>
+        <p>{countdownDisplay}</p>
+      </div>
+    </div>
+  );
+};
+
+export default TimeCountdownApp;
